@@ -14,9 +14,10 @@ import {
 } from '@mui/material';
 
 function Books() {
+    // State to hold the list of books
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
+// pull books data when the component mounts
   useEffect(() => {
     if (books.length === 0) {
       getBooks();
