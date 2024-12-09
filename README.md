@@ -1,3 +1,4 @@
+Fisrt step solution
 1. Ticket #101 - Enhance code documentation
 User Story:
 As a developer, I want detailed comments for each function to better understand the codebase and maintain it efficiently.
