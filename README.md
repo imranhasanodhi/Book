@@ -1,3 +1,4 @@
+<<<<<<< HEADmai
 # Books MVP
 
 Your task is to address all issues listed below.  
@@ -65,3 +66,11 @@ Fork this project and solve the tickets one by one by creating a branch for each
     As a user, I want the `SinglePage` component to match the style of the rest of the application for a seamless experience.  
   - **Task**:  
     Use Material-UI to style the `SinglePage` component, ensuring it aligns with the application's existing design.
+=======
+Fisrt step solution
+1. Ticket #101 - Enhance code documentation
+User Story:
+As a developer, I want detailed comments for each function to better understand the codebase and maintain it efficiently.
+Task:
+Add descriptive comments to all functions across the codebase to improve readability and facilitate easier maintenance.
+>>>>>>> Ticket1

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import useAxios from "../services/useAxios";
 import {
   Box,
   Card,
@@ -14,32 +14,28 @@ import {
 } from '@mui/material';
 
 function Books() {
-    // State to hold the list of books
+  const { data, loading, get } = useAxios('http://localhost:3000');
   const [books, setBooks] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-// pull books data when the component mounts
+
   useEffect(() => {
-    if (books.length === 0) {
-      getBooks();
-    }
+    fetchBooks();
   }, []);
 
-  // TODO: Replace axios with useAxios hook
-  async function getBooks() {
-    try {
-      const response = await axios.get('http://localhost:3000/books');
-      setBooks(response.data);
-      setIsLoading(false);
-    } catch (error) {
-      console.error(error);
+  useEffect(() => {
+    // Update the books state when data from useAxios changes
+    if (data) {
+      setBooks(data);
     }
-  }
+  }, [data]);
 
-  // TODO: Implement search functionality
+  const fetchBooks = async () => {
+    await get('books');
+  };
+
   return (
     <Box sx={{ mx: 'auto', p: 2 }}>
-      {isLoading && <CircularProgress />}
-      {!isLoading && (
+      {loading && <CircularProgress />}
+      {!loading && books.length > 0 && (
         <div>
           <Stack
             sx={{ justifyContent: 'space-around' }}
@@ -88,7 +84,7 @@ function Books() {
                 >
                   <Rating
                     name="read-only"
-                    value={book.stars}
+                    value={Number(book.stars)}
                     readOnly
                     size="small"
                   />
