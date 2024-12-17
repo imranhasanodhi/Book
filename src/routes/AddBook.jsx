@@ -10,15 +10,13 @@ import Select from '@mui/material/Select';
 import Alert from '@mui/material/Alert';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import useAxios from '../services/useAxios';  // Import custom hook for Axios
-import { bookGenres } from '../genres';  //import book genres
+import { bookGenres } from '../genres'; 
 import { Stack, Typography } from '@mui/material';
 
 function AddBook() {
   // Use the custom hook for Axios
   const { alert, post } = useAxios('http://localhost:3001');
-  //local state  for rating value
   const [rateValue, setRateValue] = useState(3);
-  //managing book form data
   const [book, setBook] = useState({
     author: '',
     name: '',
@@ -28,7 +26,7 @@ function AddBook() {
     end: null,
     stars: null,
   });
-//handler for rating change
+//Handling rating change
   const genreChangeHandler = (event) => {
     const { value } = event.target;
     setBook({
@@ -44,8 +42,6 @@ function AddBook() {
       stars: value,
     });
   };
-
-  //handler for input changes(title, author, image URL)
   const addBookHandler = (e) => {
     const { name, value, checked, type } = e.target;
     if (type === 'checkbox' && name === 'completed') {
@@ -54,7 +50,6 @@ function AddBook() {
       setBook({ ...book, [name]: value });
     }
   };
-//function to handle the post request for adding new book
   function postHandler() {
     post('books', book);
   }
@@ -117,10 +112,10 @@ function AddBook() {
             name="stars"
             value={rateValue}
             onClick={rateChangeHandler}
-            size="large"
-            onChange={(event, newValue) => {
-              setRateValue(newValue);  //update rating value
+            onChangeActive={(event, newValue) => {
+              setRateValue(newValue);  //update rating value on mouse hover
             }}
+            size="large"
           />
         </Stack>
         <Button variant="contained" type="submit">
