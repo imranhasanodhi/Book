@@ -10,7 +10,7 @@ import Select from '@mui/material/Select';
 import Alert from '@mui/material/Alert';
 import { DateField } from '@mui/x-date-pickers/DateField';
 import useAxios from '../services/useAxios';  // Import custom hook for Axios
-import { bookGenres } from '../genres'; 
+import { bookGenres } from '../genres';
 import { Stack, Typography } from '@mui/material';
 
 function AddBook() {
@@ -26,7 +26,7 @@ function AddBook() {
     end: null,
     stars: null,
   });
-//Handling rating change
+
   const genreChangeHandler = (event) => {
     const { value } = event.target;
     setBook({
@@ -42,6 +42,7 @@ function AddBook() {
       stars: value,
     });
   };
+
   const addBookHandler = (e) => {
     const { name, value, checked, type } = e.target;
     if (type === 'checkbox' && name === 'completed') {
@@ -50,9 +51,11 @@ function AddBook() {
       setBook({ ...book, [name]: value });
     }
   };
-  function postHandler() {
-    post('books', book);
-  }
+
+  const postHandler = async (e) => {
+    e.preventDefault();  // Prevent form from being submitted the default way
+    await post('books', book);
+  };
 
   return (
     <form onChange={addBookHandler} onSubmit={postHandler}>
@@ -70,18 +73,24 @@ function AddBook() {
           id="outlined-basic"
           label="Title"
           variant="outlined"
+          value={book.name}
+          onChange={addBookHandler}
         />
         <TextField
           name="author"
           id="outlined-basic"
           label="Author"
           variant="outlined"
+          value={book.author}
+          onChange={addBookHandler}
         />
         <TextField
           name="img"
           id="outlined-basic"
           label="Image (url)"
           variant="outlined"
+          value={book.img}
+          onChange={addBookHandler}
         />
         <Select
           labelId="demo-multiple-name-label"
@@ -111,10 +120,7 @@ function AddBook() {
           <Rating
             name="stars"
             value={rateValue}
-            onClick={rateChangeHandler}
-            onChangeActive={(event, newValue) => {
-              setRateValue(newValue);  //update rating value on mouse hover
-            }}
+            onChange={rateChangeHandler}
             size="large"
           />
         </Stack>

@@ -16,14 +16,15 @@ const useAxios = (baseUrl) => {
   const makeRequest = async (method, endpoint, payload = null) => {
     try {
       setLoading(true);
+      console.log(`Making ${method.toUpperCase()} request to ${baseUrl}/${endpoint}`);
       const response = await axios[method](`${baseUrl}/${endpoint}`, payload);
       setData(response.data); // Update the data state
       if (method === 'post') {
         showAlert('Book added successfully', 'success');
       }
     } catch (err) {
+      console.error('Error making request:', err);
       showAlert(`Error: ${err.message}`, 'error');
-      console.error(err);
     } finally {
       setLoading(false);
     }
