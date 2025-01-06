@@ -17,27 +17,24 @@ import {
 function Books() {
   const { data, loading, get } = useAxios('http://localhost:3000');
   const [books, setBooks] = useState([]);
-  const [filteredBooks, setFilteredBooks] = useState([]); // Filtered books based on search
-  const [searchQuery, setSearchQuery] = useState(''); // State to hold search input
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     fetchBooks();
   }, []);
 
   useEffect(() => {
-    // Update the books state when data from useAxios changes
     if (data) {
       setBooks(data);
-      setFilteredBooks(data); // Initially display all books
+      setFilteredBooks(data);
     }
   }, [data]);
 
-  // Function to fetch books using the custom hook
   const fetchBooks = async () => {
     await get('books');
   };
 
-  // Handle search input and filter books
   const handleSearch = (event) => {
     const query = event.target.value.toLowerCase();
     setSearchQuery(query);
@@ -53,13 +50,10 @@ function Books() {
 
   return (
     <Box sx={{ mx: 'auto', p: 2 }}>
-      {/* Loading spinner */}
       {loading && <CircularProgress />}
 
-      {/* Content */}
       {!loading && (
         <>
-          {/* Search Bar */}
           <TextField
             label="Search Books"
             variant="outlined"
@@ -70,7 +64,6 @@ function Books() {
             sx={{ mb: 3 }}
           />
 
-          {/* Books Grid */}
           {filteredBooks.length > 0 ? (
             <Stack
               sx={{ justifyContent: 'space-around' }}
