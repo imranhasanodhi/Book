@@ -1,18 +1,7 @@
 import { useEffect, useState } from 'react';
 import useAxios from "../services/useAxios";
-import {
-  Box,
-  Card,
-  CardActions,
-  CardMedia,
-  Button,
-  CircularProgress,
-  Stack,
-  Rating,
-  Chip,
-  Typography,
-  TextField,
-} from '@mui/material';
+import { Box, Card, CardActions, CardMedia, Button, CircularProgress, Stack, Rating, Chip, Typography, TextField } from '@mui/material';
+import { Link } from 'react-router-dom'; // Import Link
 
 function Books() {
   const { data, loading, get } = useAxios('http://localhost:3000');
@@ -80,11 +69,11 @@ function Books() {
                     width: '15%',
                     minWidth: 200,
                   }}
-                  key={book.name}
+                  key={book.id} // Use unique id for each book
                 >
                   <CardMedia
                     sx={{ height: 250 }}
-                    image={book.img ? book.img : '/images/default-book.jpg'}  
+                    image={book.img ? book.img : '/images/default-book.jpg'}
                     title={book.name}
                   />
                   <Box sx={{ pt: 2, pl: 2 }}>
@@ -116,7 +105,9 @@ function Books() {
                       readOnly
                       size="small"
                     />
-                    <Button size="small">Learn More</Button>
+                    <Link to={`/book/${book.id}`}>
+                      <Button size="small">Learn More</Button>
+                    </Link>
                   </CardActions>
                 </Card>
               ))}

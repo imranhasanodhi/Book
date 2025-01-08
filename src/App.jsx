@@ -8,6 +8,7 @@ import Root from './routes/Root';
 import Books from './routes/Books'; 
 import Book from './routes/Book';  
 import AddBook from './routes/AddBook'; 
+import SinglePage from './routes/SinglePage';
 
 const theme = createTheme({
   palette: {
@@ -53,6 +54,7 @@ function App() {
           path: '/addnew', 
           element: <AddBook onBookAdded={handleBookAdded} /> 
         },
+        { path: '/book/:bookId', element: <SinglePage /> },
       ],
     },
   ]);
