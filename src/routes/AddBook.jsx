@@ -1,35 +1,38 @@
 import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Rating from '@mui/material/Rating';
-import Button from '@mui/material/Button';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Alert from '@mui/material/Alert';
+import {
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Rating,
+  Button,
+  OutlinedInput,
+  MenuItem,
+  Select,
+  Alert,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { DateField } from '@mui/x-date-pickers/DateField';
-import useAxios from '../services/useAxios';  // Import custom hook for Axios
-import { bookGenres } from '../genres';  //import book genres
-import { Stack, Typography } from '@mui/material';
+import useAxios from '../services/useAxios';
+import { bookGenres } from '../genres';
 
 function AddBook() {
-  // Use the custom hook for Axios
-  const { alert, post } = useAxios('http://localhost:3001');
-  //local state  for rating value
+  const { alert, post } = useAxios('http://localhost:3000');
   const [rateValue, setRateValue] = useState(3);
-  //managing book form data
   const [book, setBook] = useState({
     author: '',
     name: '',
     genres: [],
+    img: '', 
     completed: false,
     start: null,
     end: null,
-    stars: null,
+    stars: rateValue,
   });
-//handler for rating change
-  const genreChangeHandler = (event) => {
+
+  const defaultImage = '/images/default-book.jpg'; 
+
+  const handleGenreChange = (event) => {
     const { value } = event.target;
     setBook({
       ...book,
@@ -37,94 +40,91 @@ function AddBook() {
     });
   };
 
-  const rateChangeHandler = (event) => {
-    const { value } = event.target;
-    setBook({
-      ...book,
-      stars: value,
-    });
+  const handleChange = (event) => {
+    const { name, value, checked, type } = event.target;
+    setBook((prevState) => ({
+      ...prevState,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
 
-  //handler for input changes(title, author, image URL)
-  const addBookHandler = (e) => {
-    const { name, value, checked, type } = e.target;
-    if (type === 'checkbox' && name === 'completed') {
-      setBook({ ...book, [name]: checked });
-    } else {
-      setBook({ ...book, [name]: value });
-    }
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await post('books', { ...book, stars: rateValue });
   };
-//function to handle the post request for adding new book
-  function postHandler() {
-    post('books', book);
-  }
 
   return (
-    <form onChange={addBookHandler} onSubmit={postHandler}>
-      <Stack
-        spacing={1}
-        alignItems="stretch"
-        sx={{ my: 2, mx: 'auto', width: '25%' }}
-      >
+    <form onSubmit={handleSubmit}>
+      <Stack spacing={2} sx={{ my: 2, mx: 'auto', width: '30%' }}>
         {alert.show && <Alert severity={alert.type}>{alert.message}</Alert>}
-        <Typography variant="h4" component="h2" sx={{ my: 10 }}>
-          Add a book
+        <Typography variant="h4" component="h2" sx={{ mb: 2 }}>
+          Add a New Book
         </Typography>
         <TextField
           name="name"
-          id="outlined-basic"
-          label="Title"
+          label="Book Title"
           variant="outlined"
+          value={book.name}
+          onChange={handleChange}
         />
         <TextField
           name="author"
-          id="outlined-basic"
           label="Author"
           variant="outlined"
+          value={book.author}
+          onChange={handleChange}
         />
         <TextField
           name="img"
-          id="outlined-basic"
-          label="Image (url)"
+          label="Image URL"
           variant="outlined"
+          value={book.img}
+          onChange={handleChange}
         />
         <Select
-          labelId="demo-multiple-name-label"
-          id="demo-multiple-name"
+          name="genres"
           multiple
           value={book.genres}
-          name="genres"
-          onChange={genreChangeHandler}
-          input={<OutlinedInput label="Genre" />}
+          onChange={handleGenreChange}
+          input={<OutlinedInput label="Genres" />}
         >
-          {bookGenres.map((name) => (
-            <MenuItem key={name} value={name}>
-              {name}
+          {bookGenres.map((genre) => (
+            <MenuItem key={genre} value={genre}>
+              {genre}
             </MenuItem>
           ))}
         </Select>
-
         <FormControlLabel
-          name="completed"
-          control={<Checkbox checked={book.completed} />}
+          control={
+            <Checkbox
+              name="completed"
+              checked={book.completed}
+              onChange={handleChange}
+            />
+          }
           label="Completed"
         />
-
-        <DateField name="start" label="Started" />
-        <DateField name="end" label="Finished" disabled={!book.completed} />
-        <Stack spacing={1}>
-          <Rating
-            name="stars"
-            value={rateValue}
-            onClick={rateChangeHandler}
-            size="large"
-            onChange={(event, newValue) => {
-              setRateValue(newValue);  //update rating value
-            }}
-          />
-        </Stack>
+        <DateField
+          name="start"
+          label="Start Date"
+          value={book.start}
+          onChange={(newValue) => setBook({ ...book, start: newValue })}
+        />
+        <DateField
+          name="end"
+          label="End Date"
+          disabled={!book.completed}
+          value={book.end}
+          onChange={(newValue) => setBook({ ...book, end: newValue })}
+        />
+        <Rating
+          name="stars"
+          value={rateValue}
+          onChange={(event, newValue) => setRateValue(newValue)}
+          size="large"
+        />
         <Button variant="contained" type="submit">
-          Add new
+          Add Book
         </Button>
       </Stack>
     </form>

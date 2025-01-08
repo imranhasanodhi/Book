@@ -1,43 +1,64 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'; //importing routing things from package
-import { createTheme, ThemeProvider } from '@mui/material/styles';      //importing css modules(for theme)
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'; // for date picking
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';  //for changing date in date pickers
+import { useState, useEffect } from 'react'; 
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'; 
+import { createTheme, ThemeProvider } from '@mui/material/styles';      
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'; 
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';  
 
-//importing route componennts  for app routing structure
-import Root from './routes/Root';  // for layout
-import Books from './routes/Books'; // components for displaying books
-import Book from './routes/Book';  // component for every book
-import AddBook from './routes/AddBook'; // component for adding new book
+import Root from './routes/Root';  
+import Books from './routes/Books'; 
+import Book from './routes/Book';  
+import AddBook from './routes/AddBook'; 
+import SinglePage from './routes/SinglePage';
 
-// define material UI theme
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#004d40', // primary color for the app
+      main: '#004d40',
     },
     secondary: {
-      main: '#ffab40', // secondary color
+      main: '#ffab40',
     },
   },
 });
 
-// main application component
 function App() {
-  //define routes and paths
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      const response = await fetch('http://localhost:3001/books');
+      const data = await response.json();
+      setBooks(data);
+    };
+    fetchBooks();
+  }, []);
+
+  const handleBookAdded = (newBook) => {
+    setBooks((prevBooks) => [...prevBooks, newBook]); 
+  };
+
   const router = createBrowserRouter([
     {
-      path: '/',  // root path
-      element: <Root />,  // layout component for root path
-      // for outlet
+      path: '/',  
+      element: <Root />,  
       children: [ 
-        { path: '/', element: <Books /> },  //route for displayinfg book list
-        { path: '/book', element: <Book /> },  //for viewing single book
-        { path: '/addnew', element: <AddBook /> }, // route for adding new book
+        { 
+          path: '/', 
+          element: <Books books={books} /> 
+        },  
+        { 
+          path: '/book', 
+          element: <Book /> 
+        },
+        { 
+          path: '/addnew', 
+          element: <AddBook onBookAdded={handleBookAdded} /> 
+        },
+        { path: '/book/:bookId', element: <SinglePage /> },
       ],
     },
   ]);
 
-  // return providers.
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <ThemeProvider theme={theme}>
@@ -47,5 +68,4 @@ function App() {
   );
 }
 
-//export the main app component
 export default App;
