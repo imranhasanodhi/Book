@@ -84,7 +84,7 @@ function Books() {
                 >
                   <CardMedia
                     sx={{ height: 250 }}
-                    image={book.img}
+                    image={book.img ? book.img : '/images/default-book.jpg'}  
                     title={book.name}
                   />
                   <Box sx={{ pt: 2, pl: 2 }}>

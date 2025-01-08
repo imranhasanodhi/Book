@@ -18,7 +18,7 @@ const useAxios = (baseUrl) => {
       setLoading(true);
       console.log(`Making ${method.toUpperCase()} request to ${baseUrl}/${endpoint}`);
       const response = await axios[method](`${baseUrl}/${endpoint}`, payload);
-      setData(response.data); // Update the data state
+      setData(response.data); 
       if (method === 'post') {
         showAlert('Book added successfully', 'success');
       }

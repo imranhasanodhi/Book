@@ -23,12 +23,14 @@ function AddBook() {
     author: '',
     name: '',
     genres: [],
-    img: '',
+    img: '', 
     completed: false,
     start: null,
     end: null,
     stars: rateValue,
   });
+
+  const defaultImage = '/images/default-book.jpg'; 
 
   const handleGenreChange = (event) => {
     const { value } = event.target;
